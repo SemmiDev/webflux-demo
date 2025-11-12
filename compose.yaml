@@ -1,0 +1,35 @@
+services:
+  mongo:
+    image: mongo:8.0
+    container_name: mongo-db
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+    environment:
+      MONGO_INITDB_DATABASE: productdb
+    healthcheck:
+      test: ["CMD-SHELL", "mongosh --eval 'db.adminCommand(\"ping\")'"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    restart: unless-stopped
+
+  app:
+    build: .
+    container_name: webflux-app
+    ports:
+      - "8080:8080"
+    depends_on:
+      mongo:
+        condition: service_healthy
+    environment:
+      # Override ENV dari Dockerfile
+      SPRING_DATA_MONGODB_URI: mongodb://mongo:27017/productdb  # Connect ke service mongo
+      SPRING_PROFILES_ACTIVE: dev  # Override ke dev jika perlu (default prod di Dockerfile)
+      JAVA_OPTS: "-Xmx256m -Xms128m"  # Override JVM opts untuk dev (lebih kecil)
+    restart: unless-stopped
+
+volumes:
+  mongo-data:
