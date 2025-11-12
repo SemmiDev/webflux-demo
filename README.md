@@ -83,7 +83,3 @@ curl -X DELETE http://localhost:8080/api/products/6913f52e6b7648a3c246b953 \
 curl -X GET http://localhost:8080/api/products \
   -H "Accept: application/json"
 ```
-
----
-
-Kalau kamu mau, aku bisa bantu buatkan versi **otomatis** (pakai `bash` script) supaya semua request ini bisa dijalankan berurutan — cocok buat testing API secara cepat tanpa Postman. Mau saya buatin juga?
